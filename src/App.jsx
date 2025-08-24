@@ -54,6 +54,7 @@ function App() {
       .then(res => {
         console.log(res.data)
         localStorage.setItem("token", res.data.token)
+        
         navigate("/")
       })
       .catch(err => {
