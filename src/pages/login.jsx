@@ -1,12 +1,14 @@
 import { FaEnvelope, FaLock, FaSignInAlt } from "react-icons/fa";
 import Navbar from "../components/Navbar";
 import mobile1 from "../media/mobile2.png";
+import { useNavigate } from "react-router-dom";
 
-const Login = () => {
+const Login = (props) => {
+  let navigate = useNavigate();
   return (
     <>
       <div
-        className="bg-gray-700 min-h-screen flex flex-col"
+        className="bg-blue-900 min-h-screen flex flex-col"
         style={{
           clipPath: "polygon(0 0, 100% 0, 100% 92%, 0 100%)",
         }}
@@ -42,18 +44,23 @@ const Login = () => {
                 Login to Your Account
               </h1>
 
+              <p id="exist" className="text-red-500 text-center mb-6">
+                <span id="exist_text"></span>
+              </p>
+
               <form className="space-y-6">
                 {/* Email */}
                 <div>
                   <label className="block text-sm font-medium text-gray-300 mb-1">
-                    Email Address
+                    Username
                   </label>
                   <div className="flex items-center border border-gray-700 bg-gray-800 rounded-lg px-3 py-2 focus-within:ring-2 focus-within:ring-blue-500">
                     <FaEnvelope className="text-gray-400 mr-2" />
                     <input
-                      type="email"
-                      placeholder="Enter your email"
+                      type="username"
+                      placeholder="Enter your username"
                       className="flex-1 outline-none bg-transparent text-white"
+                      id="username"
                     />
                   </div>
                 </div>
@@ -69,6 +76,7 @@ const Login = () => {
                       type="password"
                       placeholder="Enter your password"
                       className="flex-1 outline-none bg-transparent text-white"
+                      id="password"
                     />
                   </div>
                 </div>
@@ -77,6 +85,12 @@ const Login = () => {
                 <button
                   type="submit"
                   className="w-full flex items-center justify-center gap-2 bg-blue-900 text-white py-3 rounded-lg font-semibold hover:bg-blue-800 transition"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    const username = document.getElementById("username").value;
+                    const password = document.getElementById("password").value;
+                    props.login(username, password);
+                  }}
                 >
                   <FaSignInAlt />
                   Login
@@ -89,6 +103,10 @@ const Login = () => {
                 <a
                   href="/register"
                   className="text-blue-500 font-semibold hover:underline"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    navigate("/register");
+                  }}
                 >
                   Register
                 </a>

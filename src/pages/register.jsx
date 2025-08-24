@@ -1,8 +1,10 @@
 import { FaUser, FaEnvelope, FaLock, FaRocket } from "react-icons/fa";
 import Navbar from "../components/Navbar";
 import mobile1 from "../media/mobile2.png";
+import { useNavigate } from "react-router-dom";
 
 const Register = (props) => {
+  let navigate = useNavigate();
   return (
     <>
       <div
@@ -140,8 +142,12 @@ const Register = (props) => {
               <p className="text-center text-sm text-gray-400 mt-6">
                 Already have an account?{" "}
                 <a
-                  href="/login"
+                  // href="/login"
                   className="text-blue-500 font-semibold hover:underline"
+                  onClick={(e)=>{
+                    e.preventDefault();
+                    navigate("/login")
+                  }}
                 >
                   Login
                 </a>
