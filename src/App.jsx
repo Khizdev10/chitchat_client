@@ -13,7 +13,32 @@ import Register from './pages/register'
 import Login from './pages/login'
 
 function App() {
-  const [count, setCount] = useState(0)
+
+
+  const loginWithToken = async (token_stored) => {
+    await axios.post("http://localhost:3000/tokenlogin", {token: token_stored}, {
+      headers: {
+        'content-type': 'application/json'
+      }
+    })
+      .then(res => {
+        console.log("Login successful:", res.data);
+        // Handle successful login here (e.g., update state, redirect, etc.)
+      })
+      .catch(e => {
+        console.error("Login failed:", e);
+        // Handle login error (e.g., clear invalid token, show error message)
+      });
+  };
+    let token_stored = localStorage.getItem("token");
+  if (token_stored) {
+    // alert("yup")
+    loginWithToken(token_stored)
+  }
+  else {
+
+  }
+  console.log("token is sssssssssssssss ", token_stored)
   // let navigate = useNavigate();
   const register = async (username, email, password) => {
     let newUser = {
@@ -47,14 +72,13 @@ function App() {
       password
     }
     await axios.post("http://localhost:3000/login", user, {
-      headers : {
-        "content-type" : "application/json"
+      headers: {
+        "content-type": "application/json"
       }
     })
       .then(res => {
         console.log(res.data)
         localStorage.setItem("token", res.data.token)
-        
         navigate("/")
       })
       .catch(err => {
@@ -62,17 +86,17 @@ function App() {
         document.querySelector("#exist").style.display = "block"
         document.querySelector("#exist_text").textContent = err.response.data.message
       })
-    }
-    return (
-      <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<Main />} />
-          <Route path="/Register" element={<Register register={register} />} />
-          <Route path="/login" element={<Login login={login} />} />
-        </Routes>
-      </BrowserRouter>
-
-    )
   }
+  return (
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<Main />} />
+        <Route path="/Register" element={<Register register={register} />} />
+        <Route path="/login" element={<Login login={login} />} />
+      </Routes>
+    </BrowserRouter>
 
-  export default App
+  )
+}
+
+export default App
