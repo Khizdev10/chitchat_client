@@ -30,10 +30,12 @@ function App() {
         // Handle login error (e.g., clear invalid token, show error message)
       });
 
+
+
   };
     let token_stored = localStorage.getItem("token");
   if (token_stored) {
-    alert("yup")
+    // alert("yup")
     loginWithToken(token_stored)
   }
   else {
