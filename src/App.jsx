@@ -33,7 +33,7 @@ function App() {
   };
     let token_stored = localStorage.getItem("token");
   if (token_stored) {
-    // alert("yup")
+    alert("yup")
     loginWithToken(token_stored)
   }
   else {
