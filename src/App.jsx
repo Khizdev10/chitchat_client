@@ -16,7 +16,7 @@ function App() {
 
 
   const loginWithToken = async (token_stored) => {
-    await axios.post("http://localhost:3000/tokenlogin", {token: token_stored}, {
+    await axios.post("http://localhost:3000/tokenlogin", { token: token_stored }, {
       headers: {
         'content-type': 'application/json'
       }
@@ -33,7 +33,7 @@ function App() {
 
 
   };
-    let token_stored = localStorage.getItem("token");
+  let token_stored = localStorage.getItem("token");
   if (token_stored) {
     // alert("yup")
     loginWithToken(token_stored)
@@ -79,6 +79,7 @@ function App() {
         "content-type": "application/json"
       }
     })
+
       .then(res => {
         console.log(res.data)
         localStorage.setItem("token", res.data.token)
