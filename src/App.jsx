@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { BrowserRouter, Routes, Route, useNavigate } from 'react-router-dom'
 
 // importing axios to send request to the backend server
@@ -13,7 +13,7 @@ import Register from './pages/register'
 import Login from './pages/login'
 
 function App() {
-
+  const [user, setUser] = useState(null)
 
   const loginWithToken = async (token_stored) => {
     await axios.post("http://localhost:3000/tokenlogin", { token: token_stored }, {
@@ -23,6 +23,15 @@ function App() {
     })
       .then(res => {
         console.log("Login successful:", res.data);
+        let user = res.data.user
+        if (res.data?.user) {
+          setUser(user)
+        }
+        else {
+          console.log("user not found of aklfdjalkfjlsd")
+
+        }
+
         // Handle successful login here (e.g., update state, redirect, etc.)
       })
       .catch(e => {
@@ -33,15 +42,19 @@ function App() {
 
 
   };
-  let token_stored = localStorage.getItem("token");
-  if (token_stored) {
-    // alert("yup")
-    loginWithToken(token_stored)
-  }
-  else {
 
-  }
-  console.log("token is sssssssssssssss ", token_stored)
+
+
+  useEffect(()=>{
+    console.log("user is ", user)
+  },[user])
+  useEffect(() => {
+    const token_stored = localStorage.getItem("token");
+    if (token_stored) {
+      loginWithToken(token_stored);
+      console.log("token is sssssssssssssss ", token_stored)
+    }
+  }, []); // ✅ run once when App mounts
   // let navigate = useNavigate();
   const register = async (username, email, password) => {
     let newUser = {

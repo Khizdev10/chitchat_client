@@ -10,9 +10,9 @@ export default function NavbarLayout() {
   }, [darkMode]);
 
   const navLinks = [
-    { name: "Home", href: "#" },
-    { name: "Login", href: "#" },
-    { name: "Signup", href: "#" },
+    { name: "Home", href: "/" },
+    { name: "Login", href: "/login" },
+    { name: "Signup", href: "/register" },
   ];
 
   return (
