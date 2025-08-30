@@ -35,7 +35,7 @@ function App() {
         // Handle successful login here (e.g., update state, redirect, etc.)
       })
       .catch(e => {
-        console.error("Login failed:", e);
+        console.error("Login failed  :", e);
         // Handle login error (e.g., clear invalid token, show error message)
       });
 
