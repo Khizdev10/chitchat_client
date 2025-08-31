@@ -25,7 +25,9 @@ export default function NavbarLayout({ user,setUserOut }) {
         setUserOut()
     } },
     { name: "Profile", href: "/profile" },
-    { name: "Dashboard", href: "/Dashboard" },
+    { name: "Dashboard", onClick:()=>{
+      navigate("/Dashboard")
+    } },
   ]
 
   return (
@@ -44,6 +46,7 @@ export default function NavbarLayout({ user,setUserOut }) {
                 key={link.name}
                 href={link.href}
                 onClick={link.onClick}
+                style={{cursor:"pointer"}}
                 className="hover:text-gray-500 font-bold transition-colors"
               >
                 {link.name}
