@@ -31,9 +31,11 @@ function AppRoutes() {
         navigate("/")
       } else {
         console.log("❌ Token login failed. No user returned.")
+        navigate("/login")
       }
     } catch (e) {
       console.error("🚨 Login failed with token:", e)
+      navigate("/login")
     }
   }
 
