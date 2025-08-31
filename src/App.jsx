@@ -1,10 +1,6 @@
 import { useEffect, useState } from 'react'
 import { BrowserRouter, Routes, Route, useNavigate } from 'react-router-dom'
-
-// importing axios to send request to the backend server
-import axios from 'axios';
-
-
+import axios from 'axios'
 
 // importing pages and components
 import './App.css'
@@ -13,106 +9,99 @@ import Register from './pages/register'
 import Login from './pages/login'
 
 function App() {
+  return (
+    <BrowserRouter>
+      <AppRoutes />
+    </BrowserRouter>
+  )
+}
+
+function AppRoutes() {
   const [user, setUser] = useState(null)
+  const navigate = useNavigate()
 
   const loginWithToken = async (token_stored) => {
-    await axios.post("http://localhost:3000/tokenlogin", { token: token_stored }, {
-      headers: {
-        'content-type': 'application/json'
+    console.log("🔑 Trying token login with token:", token_stored)
+
+    try {
+      const res = await axios.post("http://localhost:3000/tokenlogin", { token: token_stored })
+      if (res.data?.user) {
+        console.log("✅ Token login successful. User:", res.data.user)
+        setUser(res.data.user)
+        navigate("/")
+      } else {
+        console.log("❌ Token login failed. No user returned.")
       }
-    })
-      .then(res => {
-        console.log("Login successful:", res.data);
-        let user = res.data.user
-        if (res.data?.user) {
-          setUser(user)
-        }
-        else {
-          console.log("user not found of aklfdjalkfjlsd")
+    } catch (e) {
+      console.error("🚨 Login failed with token:", e)
+    }
+  }
 
-        }
-
-        // Handle successful login here (e.g., update state, redirect, etc.)
-      })
-      .catch(e => {
-        console.error("Login failed  :", e);
-        // Handle login error (e.g., clear invalid token, show error message)
-      });
-
-
-
-  };
-
-
-
-  useEffect(()=>{
-    console.log("user is ", user)
-  },[user])
   useEffect(() => {
-    const token_stored = localStorage.getItem("token");
+    const token_stored = localStorage.getItem("token")
     if (token_stored) {
-      loginWithToken(token_stored);
-      console.log("token is sssssssssssssss ", token_stored)
+      loginWithToken(token_stored)
+    } else {
+      console.log("⚠️ No token found in localStorage")
     }
-  }, []); // ✅ run once when App mounts
-  // let navigate = useNavigate();
-  const register = async (username, email, password) => {
-    let newUser = {
-      username,
-      email,
-      password
-    }
-    await axios.post('http://localhost:3000/register', newUser, {
-      headers: {
-        "content-type": "application/json"
-      }
-    })
-      .then(res => {
-        //  idr token undefined aa rha ha solve kro is issue ko
-        console.log(res.data, res.data.token)
-        localStorage.setItem("token", res.data.token)
-        // navigate("/")
-      })
-      .catch(err => {
-        // alert(err.response.data.message)
+  }, [])
 
-        document.querySelector("#exist").style.display = "none"
-        document.querySelector("#exist").style.display = "block"
-        document.querySelector("#exist_text").textContent = err.response.data.message
-      })
+  useEffect(() => {
+    console.log("👤 Current user state is:", user)
+  }, [user])
+
+  const register = async (username, email, password) => {
+    console.log("📝 Attempting register with:", { username, email })
+    try {
+      const res = await axios.post("http://localhost:3000/register", { username, email, password })
+      console.log("✅ Register response:", res.data)
+
+      localStorage.setItem("token", res.data?.token)
+      console.log("📦 Saved token to localStorage:", res.data?.token)
+
+      setUser(res.data.user) // if backend returns user along with token
+      console.log("👤 User saved after register:", res.data.user)
+
+      navigate("/")
+    } catch (err) {
+      console.error("🚨 Register failed:", err.response?.data?.message)
+      document.querySelector("#exist").style.display = "block"
+      document.querySelector("#exist_text").textContent = err.response?.data?.message || "Error"
+    }
   }
 
   const login = async (username, password) => {
-    let user = {
-      username,
-      password
+    console.log("🔐 Attempting login with:", { username })
+    try {
+      const res = await axios.post("http://localhost:3000/login", { username, password })
+      console.log("✅ Login response:", res.data)
+
+      localStorage.setItem("token", res.data.token)
+      console.log("📦 Saved token to localStorage:", res.data.token)
+
+      setUser(res.data.user) // if backend returns user
+      console.log("👤 User saved after login:", res.data.user)
+
+      navigate("/")
+    } catch (err) {
+      console.error("🚨 Login failed:", err.response?.data?.message)
+      document.querySelector("#exist").style.display = "block"
+      document.querySelector("#exist_text").textContent = err.response?.data?.message || "Error"
     }
-    await axios.post("http://localhost:3000/login", user, {
-      headers: {
-        "content-type": "application/json"
-      }
-    })
-
-      .then(res => {
-        console.log(res.data)
-        localStorage.setItem("token", res.data.token)
-        navigate("/")
-      })
-      .catch(err => {
-        document.querySelector("#exist").style.display = "none"
-        document.querySelector("#exist").style.display = "block"
-        document.querySelector("#exist_text").textContent = err.response.data.message
-      })
   }
-  return (
-    <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<Main />} />
-        <Route path="/Register" element={<Register register={register} />} />
-        <Route path="/login" element={<Login login={login} />} />
-      </Routes>
-    </BrowserRouter>
 
+  const setUserOut = () => {
+    setUser(null)
+    localStorage.removeItem("token")
+    navigate("/")
+  }
+
+  return (
+    <Routes>
+      <Route path="/" element={<Main user={user} setUserOut={setUserOut} />} />
+      <Route path="/register" element={<Register register={register} user={user} />} />
+      <Route path="/login" element={<Login login={login} user={user} />} />
+    </Routes>
   )
 }
 

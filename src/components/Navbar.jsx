@@ -1,9 +1,12 @@
 import { useState, useEffect } from "react";
 import { Menu, X, Sun, Moon } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
-export default function NavbarLayout() {
+export default function NavbarLayout({ user,setUserOut }) {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [darkMode, setDarkMode] = useState(false);
+
+  const navigate = useNavigate()
 
   useEffect(() => {
     document.documentElement.classList.toggle("dark", darkMode);
@@ -15,6 +18,16 @@ export default function NavbarLayout() {
     { name: "Signup", href: "/register" },
   ];
 
+  const navLinkLogin = [
+    { name: "Home", href: "/" },
+    { name: "Logout", 
+      onClick:()=>{
+        setUserOut()
+    } },
+    { name: "Profile", href: "/profile" },
+    { name: "Dashboard", href: "/Dashboard" },
+  ]
+
   return (
     <div className="bg-transparent text-gray-800 dark:text-white">
       {/* Top Navbar */}
@@ -24,7 +37,18 @@ export default function NavbarLayout() {
 
           {/* Desktop Nav */}
           <div className="hidden md:flex items-center space-x-6">
-            {navLinks.map((link) => (
+          
+          
+            { user ? navLinkLogin.map((link) => (
+              <a
+                key={link.name}
+                href={link.href}
+                onClick={link.onClick}
+                className="hover:text-gray-500 font-bold transition-colors"
+              >
+                {link.name}
+              </a>
+            )) : navLinks.map((link) => (
               <a
                 key={link.name}
                 href={link.href}

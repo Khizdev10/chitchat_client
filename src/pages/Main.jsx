@@ -1,5 +1,5 @@
 import Navbar from "../components/Navbar"
-import {  useNavigate } from "react-router-dom"
+import { useNavigate } from "react-router-dom"
 // media import
 import mobile from '../media/mobile.png'
 import mobile2 from '../media/mobile2.png'
@@ -9,13 +9,13 @@ import people from '../media/people.jpg'
 import { FaRocket } from "react-icons/fa";
 import { FaSignInAlt } from "react-icons/fa";
 
-const Main = () => {
+const Main = ({ user,setUserOut }) => {
 
-    let navigate  = useNavigate();
+    let navigate = useNavigate();
     return (
         <>
             <div className="bg-blue-900" style={{ height: "90vh", transform: "translateY(-20px)", clipPath: "polygon(0 0, 100% 0, 100% 95%, 0 100%)" }}>
-                <Navbar />
+                <Navbar user={user}   setUserOut={setUserOut}/>
                 <div className="px-4" style={{
                     height: "90vh", display: "flex", flexWrap: "wrap", marginTop: "20px", justifyContent: "space-between",
                     alignItems: "center",
@@ -25,10 +25,20 @@ const Main = () => {
                         <p className=" semibold tracking-wider ">Welcome to my little corner of Chit Chat! I'm just here to vibe, connect, and have some light-hearted conversations.
                             Whether it's a quick hello, a random thought, or a fun story, feel free to drop a message. No pressure, just good vibes and friendly chats. 😊✨</p>
                         <div className="my-2">
-                            <button className="btn bg-white text-black
+
+                            { user ? (
+                                <div>
+                                <button className="btn bg-white text-black
+                btn-sm py"  onClick={()=>navigate("/Dashboard")}><FaRocket size={18} /> Dashboard </button>
+                            <button className="btn bg-black-900
+                         btn-sm py mx-2 px-6" onClick={()=>setUserOut()}><FaSignInAlt size={18} /> Logout </button>
+                            </div>
+                            ) : (<div>
+                                <button className="btn bg-white text-black
                 btn-sm py"  onClick={()=>navigate("/Register")}><FaRocket size={18} /> Get Started </button>
                             <button className="btn bg-black-900
                          btn-sm py mx-2 px-6" onClick={()=>navigate("/Login")}><FaSignInAlt size={18} /> Login </button>
+                           </div> )}
                         </div>
                     </div>
 
@@ -65,17 +75,19 @@ const Main = () => {
                 <div className="w-100" style={{ width: "50%" }}><h1 className="text-4xl font-bold">About </h1>
                     <p className="tracking-wide text-xl " style={{ width: "90%" }}>Chit Chat is your go-to space for meaningful, lighthearted conversations. With a clean, user-friendly interface and features like instant messaging, voice notes, and media sharing, it’s designed to keep the vibe casual and positive. Step into a world where every chat is a chance to connect, laugh, and make memories—because great conversations start with Chit Chat!</p>
                     <div className="my-2">
-                        <button className="btn bg-white text-black
-                btn-lg py" onClick={()=>{
-                    navigate("/Register")
-                }}> <FaRocket size={18} /> Get Started
-                        </button>
-                        <button className="btn bg-blue-900
-                         btn-lg py mx-2 px-6" onClick={()=>{
-                            navigate("/login")
-                         }}><FaSignInAlt size={18} 
-                        //  onClick=Pavigate("/login")';
-                         /> Login </button>
+                    { user ? (
+                                <div>
+                                <button className="btn bg-white text-black
+                btn-sm py"  onClick={()=>navigate("/Dashboard")}><FaRocket size={18} /> Dashboard </button>
+                            <button className="btn bg-black-900
+                         btn-sm py mx-2 px-6" onClick={()=>setUserOut()}><FaSignInAlt size={18} /> Logout </button>
+                            </div>
+                            ) : (<div>
+                                <button className="btn bg-white text-black
+                btn-sm py"  onClick={()=>navigate("/Register")}><FaRocket size={18} /> Get Started </button>
+                            <button className="btn bg-black-900
+                         btn-sm py mx-2 px-6" onClick={()=>navigate("/Login")}><FaSignInAlt size={18} /> Login </button>
+                           </div> )}
                     </div>
 
                 </div>
