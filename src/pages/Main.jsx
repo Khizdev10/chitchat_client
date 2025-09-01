@@ -5,6 +5,7 @@ import mobile from '../media/mobile.png'
 import mobile2 from '../media/mobile2.png'
 import cat from '../media/safe.jpg'
 import people from '../media/people.jpg'
+import  { Button } from "../components/ui/button"
 // icons import 
 import { FaRocket } from "react-icons/fa";
 import { FaSignInAlt } from "react-icons/fa";
@@ -28,6 +29,8 @@ const Main = ({ user,setUserOut }) => {
 
                             { user ? (
                                 <div>
+                                    
+                {/* <Button>Button</Button> */}
                                 <button className="btn bg-white text-black
                 btn-sm py"  onClick={()=>navigate("/Dashboard")}><FaRocket size={18} /> Dashboard </button>
                             <button className="btn bg-black-900

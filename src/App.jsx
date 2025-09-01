@@ -29,7 +29,7 @@ function AppRoutes() {
       if (res.data?.user) {
         console.log("✅ Token login successful. User:", res.data.user)
         setUser(res.data.user)
-        navigate("/")
+        // navigate("/")
       } else {
         console.log("❌ Token login failed. No user returned.")
         navigate("/login")
