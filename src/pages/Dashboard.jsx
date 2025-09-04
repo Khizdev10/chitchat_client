@@ -18,7 +18,8 @@ export default function Dashboard() {
   return (
     <main className="overflow-hidden">
       <parents className="flex justify-between">
-        <sidebar className="bg-gray-900 h-100" style={{ width: "25%", height: "100vh" }}>
+
+        <sidebar className="bg-gray-900 h-100" style={{ width: "45%", height: "100vh" }}>
 
           <div className="flex justify-between p-2 items-center">
             <div><span className="  text-md m-2" style={{ fontWeight: "bold" }}>Chit-Chat</span><span className="text-gray">v1.1</span></div>
@@ -31,7 +32,7 @@ export default function Dashboard() {
 
           {/* SEARCHBOX FOR SEARCHING USERS.... */}
           <searchbox className="flex justify-center   bg-gray-900">
-            <div className="relative w-90">
+            <div className="relative " style={{width:"95%"}}>
               <FaSearch className="absolute left-3 top-2.5 text-gray-400" />
               <input
                 type="search"
