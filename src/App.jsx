@@ -2,7 +2,6 @@ import { useEffect, useState } from 'react'
 import { BrowserRouter, Routes, Route, useNavigate } from 'react-router-dom'
 import axios from 'axios'
 
-
 // importing pages and components
 import './App.css'
 import Main from './pages/Main'

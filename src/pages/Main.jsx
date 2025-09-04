@@ -5,7 +5,6 @@ import mobile from '../media/mobile.png'
 import mobile2 from '../media/mobile2.png'
 import cat from '../media/safe.jpg'
 import people from '../media/people.jpg'
-import  { Button } from "../components/ui/button"
 // icons import 
 import { FaRocket } from "react-icons/fa";
 import { FaSignInAlt } from "react-icons/fa";
@@ -22,6 +21,7 @@ const Main = ({ user,setUserOut }) => {
                     alignItems: "center",
                 }}>
                     <div className="main" style={{ paddingLeft: "15%", width: "46%", }}>
+                        {/* <Button> HELLO WORLD </Button> */}
                         <h1 className=" text-3xl font-bold">Chit Chat | Chatting App</h1>
                         <p className=" semibold tracking-wider ">Welcome to my little corner of Chit Chat! I'm just here to vibe, connect, and have some light-hearted conversations.
                             Whether it's a quick hello, a random thought, or a fun story, feel free to drop a message. No pressure, just good vibes and friendly chats. 😊✨</p>

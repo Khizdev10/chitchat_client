@@ -1,0 +1,21 @@
+:root {
+    --background: 220 120% 100%;       /* light background */
+    --foreground: 222.2 84% 4.9%;  /* dark text */
+  
+    --border: 214.3 31.8% 91.4%;
+    
+    /* If you want dark navbar */
+    --primary: 222.2 47.4% 11.2%;  /* near black */
+    --primary-foreground: 210 40% 98%; /* white text */
+  }
+  
+  .dark {
+    --background: 222.2 84% 4.9%;     /* dark background */
+    --foreground: 210 40% 98%;        /* light text */
+  
+    --border: 217.2 32.6% 17.5%;
+  
+    --primary: 210 40% 98%;           /* white text */
+    --primary-foreground: 222.2 47.4% 11.2%; /* black bg */
+  }
+  
