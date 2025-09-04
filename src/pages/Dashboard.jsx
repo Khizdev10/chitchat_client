@@ -51,7 +51,8 @@ export default function Dashboard() {
             </div>
             <div>
 
-              <p className="text-sm pr-2" style={{ opacity: "0.7" }}>4:30 pm</p>
+
+              <p className="text-sm pr-2" style={{ opacity: "0.7" }}>4:36 pm</p>
               <p className="text-sm pr-4" style={{ opacity: "0.7" }}>8/12/2025</p>
             </div>
           </div>
