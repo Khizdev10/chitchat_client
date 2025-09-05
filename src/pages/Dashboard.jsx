@@ -26,7 +26,8 @@ export default function Dashboard() {
             <span className="flex"> <FaHome className="text-lg m-2 cursor-pointer mr-2" onClick={() => {
               navigate("/")
             }} /> <FaCog className="text-lg m-2 cursor-pointer mr-2" />
-              <FaGithub className="text-lg m-2 cursor-pointer mr-2" /> <FaLinkedin className="text-lg m-2 cursor-pointer mr-2 " /> </span>
+             <a href="https://github.com/Khizdev10" target="blank"> <FaGithub className="text-lg m-2 cursor-pointer mr-2" /> </a> 
+             <a  href="https://www.linkedin.com/in/khizar-abbasi-856363367/" target="blank"> <FaLinkedin className="text-lg m-2 cursor-pointer mr-2 "  /></a> </span>
           </div>
 
 
