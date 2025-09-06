@@ -8,6 +8,7 @@ import Main from './pages/Main'
 import Register from './pages/register'
 import Login from './pages/login'
 import Dashboard from './pages/Dashboard'
+import Addpic from './pages/Addpic'
 function App() {
   return (
     <BrowserRouter>
@@ -64,7 +65,7 @@ function AppRoutes() {
       setUser(res.data.user) // if backend returns user along with token
       console.log("👤 User saved after register:", res.data.user)
 
-      navigate("/")
+      navigate("/addpic")
     } catch (err) {
       console.error("🚨 Register failed:", err.response?.data?.message)
       document.querySelector("#exist").style.display = "block"
@@ -91,6 +92,10 @@ function AppRoutes() {
       document.querySelector("#exist_text").textContent = err.response?.data?.message || "Error"
     }
   }
+  
+  const updateUser = (data)=>{
+    setUser(data)
+  }
 
   const setUserOut = () => {
     setUser(null)
@@ -104,6 +109,7 @@ function AppRoutes() {
       <Route path="/register" element={<Register register={register} user={user} />} />
       <Route path="/login" element={<Login login={login} user={user} />} />
       <Route path="/Dashboard" element={<Dashboard user={user} />} />
+      <Route path="/addpic" element={<Addpic user={user} updateUser={updateUser} />}></Route>
     </Routes>
   )
 }

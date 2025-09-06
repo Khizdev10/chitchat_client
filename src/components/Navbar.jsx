@@ -1,12 +1,13 @@
 import { useState, useEffect } from "react";
 import { Menu, X, Sun, Moon } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { FaUser } from "react-icons/fa";
 
-export default function NavbarLayout({ user,setUserOut }) {
+export default function NavbarLayout({ user, setUserOut }) {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [darkMode, setDarkMode] = useState(false);
 
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   useEffect(() => {
     document.documentElement.classList.toggle("dark", darkMode);
@@ -20,18 +21,29 @@ export default function NavbarLayout({ user,setUserOut }) {
 
   const navLinkLogin = [
     { name: "Home", href: "/" },
-    { name: "Logout", 
-      onClick:()=>{
-        setUserOut()
-    } },
-    { name: "Profile", href: "/profile" },
-    { name: "Dashboard", onClick:()=>{
-      navigate("/Dashboard")
-    } },
-  ]
+    {
+      name: "Logout",
+      onClick: () => {
+        setUserOut();
+      },
+    },
+    {
+      name: "Dashboard",
+      onClick: () => {
+        navigate("/Dashboard");
+      },
+    },
+    {
+      name: "ProfileIcon", // placeholder so we can map it
+      type: "icon",
+      onClick: () => {
+        navigate("/profile");
+      },
+    },
+  ];
 
   return (
-    <div className="bg-transparent text-gray-800 dark:text-white">
+    <div className="bg-transparent text-gray-800 dark:text-white ">
       {/* Top Navbar */}
       <header className="w-full fixed top-0 left-0 z-50 bg-transparent backdrop-blur-md">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
@@ -39,27 +51,45 @@ export default function NavbarLayout({ user,setUserOut }) {
 
           {/* Desktop Nav */}
           <div className="hidden md:flex items-center space-x-6">
-          
-          
-            { user ? navLinkLogin.map((link) => (
-              <a
-                key={link.name}
-                href={link.href}
-                onClick={link.onClick}
-                style={{cursor:"pointer"}}
-                className="hover:text-gray-500 font-bold transition-colors"
-              >
-                {link.name}
-              </a>
-            )) : navLinks.map((link) => (
-              <a
-                key={link.name}
-                href={link.href}
-                className="hover:text-gray-500 font-bold transition-colors"
-              >
-                {link.name}
-              </a>
-            ))}
+            {user
+              ? navLinkLogin.map((link) =>
+                  link.type === "icon" ? (
+                    <button
+                      key={link.name}
+                      onClick={link.onClick}
+                      className="hover:text-gray-500 transition-colors"
+                    >
+                      {user?.profilePic ? (
+                        <img
+                          src={user.profilePic}
+                          alt="User"
+                          className="w-8 h-8 rounded-full object-cover"
+                        />
+                      ) : (
+                        <FaUser className="text-xl" />
+                      )}
+                    </button>
+                  ) : (
+                    <a
+                      key={link.name}
+                      href={link.href}
+                      onClick={link.onClick}
+                      style={{ cursor: "pointer" }}
+                      className="hover:text-gray-500 font-bold transition-colors"
+                    >
+                      {link.name}
+                    </a>
+                  )
+                )
+              : navLinks.map((link) => (
+                  <a
+                    key={link.name}
+                    href={link.href}
+                    className="hover:text-gray-500 font-bold transition-colors"
+                  >
+                    {link.name}
+                  </a>
+                ))}
             <button
               onClick={() => setDarkMode(!darkMode)}
               className="hover:text-yellow-500"
