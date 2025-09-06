@@ -11,7 +11,7 @@ import Sidebar from '../components/Sidebar'
 import Content from '../components/Content'
 
 
-export default function Dashboard() {
+export default function Dashboard(props) {
   const [selectedUser, setSelectedUser] = useState(null);
   const navigate = useNavigate()
 
@@ -19,8 +19,8 @@ export default function Dashboard() {
     <main className="overflow-hidden">
       <parents className="flex justify-between">
 
-       <Sidebar />
-       <Content />
+       <Sidebar  user={props.user}/>
+       <Content user={props.user}/>
       
       
 

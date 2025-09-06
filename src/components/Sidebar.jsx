@@ -4,9 +4,9 @@ import { FaCog, FaComments, FaCommentDots, FaRegCopyright, FaUser } from "react-
 import { FaGithub, FaLinkedin } from "react-icons/fa";
 import { Navigate, useNavigate } from "react-router-dom";
 
-const Sidebar = () => {
+const Sidebar = (props) => {
 
-const navigate = useNavigate()
+const navigate = useNavigate(props)
 
   return (
 
@@ -14,7 +14,18 @@ const navigate = useNavigate()
     <sidebar className="bg-gray-900 h-100" style={{ width: "45%", height: "100vh" }}>
 
       <div className="flex justify-between p-2 items-center">
-        <div><span className="  text-md m-2" style={{ fontWeight: "bold" }}>Chit-Chat</span><span className="text-gray">v1.1</span></div>
+        <div>   {props.user?.profilePic ? (
+      <img
+        src={props.user.profilePic}
+        alt="User"
+        className="w-10 h-10 rounded-full object-cover border-2 border-white cursor-pointer inline-block ml-2 flex items-center "
+      />
+    ) : (
+      <FaUser className="text-lg m-2 cursor-pointer mr-2  items-center  w-8 h-8 inline-block" />
+    )}
+    
+    <span className="  text-md m-2" style={{ fontWeight: "bold" }}>Chit-Chat</span><span className="text-gray">v1.1</span>
+     </div>
         <span className="flex"> <FaHome className="text-lg m-2 cursor-pointer mr-2" onClick={() => {
           navigate("/")
         }} />

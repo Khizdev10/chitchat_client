@@ -62,7 +62,7 @@ export default function NavbarLayout({ user, setUserOut }) {
                           <img
                             src={user.profilePic}
                             alt="User"
-                            className="w-8 h-8 rounded-full object-cover border-2 border-blue-500 cursor-pointer"
+                            className="w-8 h-8 rounded-full object-cover border-2 border-white cursor-pointer"
                           />
                         ) : (
                           <FaUser className="text-xl cursor-pointer" />
