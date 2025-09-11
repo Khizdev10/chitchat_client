@@ -89,7 +89,7 @@ const Sidebar = (props) => {
       <button className="btn border-gray-600 mt-2 ml-4 rounded-full bg-transparent hover:border-blue-500" style={{opacity:"0.7"}}>Friends</button>
     </div>
       {/* Example Chat Boxes */}
-      <div className="mt-2 flex items-center justify-between hover:bg-gray-700 cursor-pointer rounded transition m-2 ml-0">
+      <div className="mt-2 flex items-center justify-between hover:bg-gray-700 cursor-pointer rounded transition m-2 ml-2">
         <div className="p-2 pl-4">
           <h1 className="font-semibold">Khizar Abbasi</h1>
           <p className="text-sm opacity-70">Where are you man???</p>
