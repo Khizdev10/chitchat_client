@@ -7,21 +7,21 @@ import axios from 'axios'
 const Content = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
-  const [users,setusers] = useState([])
+  const [users, setusers] = useState([])
   // Example user list (replace with API later)
   // const users = ["Alice", "Bob", "Charlie", "David", "Eve", "Frank"];
   // let users = [];
   const getUsers = async () => {
-try{
-  const res = await axios.get("http://localhost:3000/users")
- setusers(res.data)
-}
-catch(e){
-  console.log("error fetching the users",e)
-}
+    try {
+      const res = await axios.get("http://localhost:3000/users")
+      setusers(res.data)
+    }
+    catch (e) {
+      console.log("error fetching the users", e)
+    }
   }
 
-  console.log("users",users)
+  console.log("users", users)
 
   // getUsers()
 
@@ -89,10 +89,12 @@ catch(e){
                         setIsModalOpen(false);
                       }}
                     >
-                     <img className="w-10 h-10 rounded-full" src={user.profilePic || "https://cdn-icons-png.flaticon.com/512/149/149071.png"} alt="dont have profile pic" />
-                     <span>{user.username}</span>
-                     <a className="btn bg-gray-800">Add</a>
-                     {/* <FaCommentDots/> */}
+                      <img className="w-10 h-10 rounded-full" src={user.profilePic || 
+                        "https://cdn-icons-png.flaticon.com/512/149/149071.png"} alt="dont have profile pic" />
+                      <span>{user.username}</span>
+                      {/* now addUserToChat will add the user to the friend list of the user. */}
+                      <a className="btn bg-gray-800" onClick={() => { addUserToChat(user) }}>Add</a>
+                      {/* <FaCommentDots/> */}
                     </div>
                   ))
                 ) : (
