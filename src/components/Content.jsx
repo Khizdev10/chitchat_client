@@ -88,7 +88,7 @@ const Content = () => {
                         console.log("Start chat with:", user.username);
                         setIsModalOpen(false);
                       }}
-                    >
+                    > 
                       <img className="w-10 h-10 rounded-full" src={user.profilePic || 
                         "https://cdn-icons-png.flaticon.com/512/149/149071.png"} alt="dont have profile pic" />
                       <span>{user.username}</span>
