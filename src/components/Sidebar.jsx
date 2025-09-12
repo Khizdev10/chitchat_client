@@ -80,36 +80,46 @@ const Sidebar = (props) => {
           />
         </div>
       </searchbox>
+          {
+            // props.user.friends.map((friend)=>{
+              
+            // })
+          }
 
-
-
-    <div>
+      <div>
       <button className="btn border-gray-600 mt-2 ml-4 rounded-full bg-transparent hover:border-blue-500" style={{opacity:"0.7"}}>All</button>
       <button className="btn border-gray-600 mt-2 ml-4 rounded-full bg-transparent hover:border-blue-500" style={{opacity:"0.7"}}>Announce</button>
       <button className="btn border-gray-600 mt-2 ml-4 rounded-full bg-transparent hover:border-blue-500" style={{opacity:"0.7"}}>Friends</button>
     </div>
       {/* Example Chat Boxes */}
-      <div className="mt-2 flex items-center justify-between hover:bg-gray-700 cursor-pointer rounded transition m-2 ml-2">
-        <div className="p-2 pl-4">
-          <h1 className="font-semibold">Khizar Abbasi</h1>
-          <p className="text-sm opacity-70">Where are you man???</p>
-        </div>
-        <div>
+      
+          <div>
+            {props.user?.friends? props.user?.friends.map((friend)=>{
+              return(
+                <div  className="mt-2 flex  items-center justify-between hover:bg-gray-700 cursor-pointer rounded transition m-2 ml-2" onClick={()=>{
+                // this will you know set the active chat with the other user so make this function in the app.jsx
+                  setActiveChat(friend)
+                }}>
+                 <div className="p-2 pl-4 flex items-center">
+                 <img  className="w-10 h-10 rounded-full mr-2 border-gray-600 border-2 " src={friend.profilePic || "https://cdn-icons-png.flaticon.com/512/149/149071.png"} alt="" />
+                <div>
+                <h1 className="font-semibold">{friend.username}</h1>
+                <p className="text-sm opacity-70">{friend.email}</p>
+                </div>
+              </div>
+              <div>
           <p className="text-sm pr-2 opacity-70">4:36 pm</p>
           <p className="text-sm pr-4 opacity-70">8/12/2025</p>
         </div>
+              </div>
+              
+              )
+            }):"abcdef"}
+      
+      
       </div>
-
-      <div className="mt-5 flex items-center justify-between hover:bg-gray-700 cursor-pointer rounded transition m-2">
-        <div className="p-2 pl-4">
-          <h1 className="font-semibold">Atif Khan</h1>
-          <p className="text-sm opacity-70">Slay Queen how are u</p>
-        </div>
-        <div>
-          <p className="text-sm pr-2 opacity-70">8:10 pm</p>
-          <p className="text-sm pr-4 opacity-70">8/12/2025</p>
-        </div>
-      </div>
+    
+     
     </sidebar>
   );
 };
