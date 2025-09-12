@@ -20,7 +20,7 @@ export default function Dashboard(props) {
       <parents className="flex justify-between">
 
        <Sidebar  user={props.user}/>
-       <Content user={props.user}/>
+       <Content user={props.user} setUser={props.setUser}/>
       
       
 

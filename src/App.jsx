@@ -108,7 +108,7 @@ function AppRoutes() {
       <Route path="/" element={<Main user={user} setUserOut={setUserOut} />} />
       <Route path="/register" element={<Register register={register} user={user} />} />
       <Route path="/login" element={<Login login={login} user={user} />} />
-      <Route path="/Dashboard" element={<Dashboard user={user} />} />
+      <Route path="/Dashboard" element={<Dashboard user={user} setUser={setUser} />} />
       <Route path="/addpic" element={<Addpic user={user} updateUser={updateUser} />}></Route>
     </Routes>
   )

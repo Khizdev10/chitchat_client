@@ -4,7 +4,7 @@ import { FaComments, FaCommentDots, FaRegCopyright, FaTimes } from "react-icons/
 // axios import
 import axios from 'axios'
 
-const Content = () => {
+const Content = (props) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
   const [users, setusers] = useState([])
@@ -22,6 +22,20 @@ const Content = () => {
   }
 
   console.log("users", users)
+
+
+const addUserToChat = async(userToBeAdded) =>{
+  try{
+    console.log("USER WHICH TRY TO SAVE IS : ", userToBeAdded)
+    let currentUser = props.user
+    const res = await axios.post("http://localhost:3000/add-friend",{userToBeAdded,currentUser})
+    console.log(res.data)
+    props.setUser(res.data.currentUser)
+  }
+  catch(e){
+    console.log("error adding user to chat",e)
+  }
+}
 
   // getUsers()
 
