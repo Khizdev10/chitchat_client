@@ -98,7 +98,7 @@ const Sidebar = (props) => {
               return(
                 <div  className="mt-2 flex  items-center justify-between hover:bg-gray-700 cursor-pointer rounded transition m-2 ml-2" onClick={()=>{
                 // this will you know set the active chat with the other user so make this function in the app.jsx
-                  setActiveChat(friend)
+                  props.setActiveChat(friend)
                 }}>
                  <div className="p-2 pl-4 flex items-center">
                  <img  className="w-10 h-10 rounded-full mr-2 border-gray-600 border-2 " src={friend.profilePic || "https://cdn-icons-png.flaticon.com/512/149/149071.png"} alt="" />

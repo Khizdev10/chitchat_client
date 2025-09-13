@@ -19,8 +19,8 @@ export default function Dashboard(props) {
     <main className="overflow-hidden">
       <parents className="flex justify-between">
 
-       <Sidebar  user={props.user}/>
-       <Content user={props.user} setUser={props.setUser}/>
+       <Sidebar  user={props.user} setActiveChat={props.setActiveChat} />
+       <Content user={props.user} setUser={props.setUser} selectedUser={props.selectedUser} />
       
       
 

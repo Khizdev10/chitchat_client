@@ -20,6 +20,7 @@ function App() {
 function AppRoutes() {
   const [user, setUser] = useState(null)
   const navigate = useNavigate()
+  const [selectedUser, setSelectedUser] = useState(null)
 
   const loginWithToken = async (token_stored) => {
     console.log("🔑 Trying token login with token:", token_stored)
@@ -48,6 +49,10 @@ function AppRoutes() {
       console.log("⚠️ No token found in localStorage")
     }
   }, [])
+
+  useEffect(()=>{
+    console.log("Selected user is:",selectedUser)
+  },[selectedUser])
 
   useEffect(() => {
     console.log("👤 Current user state is:", user)
@@ -103,12 +108,19 @@ function AppRoutes() {
     navigate("/")
   }
 
+  const setActiveChat = (user) => {
+    console.log("The active chat to be set is ::: ",user)
+    setSelectedUser(user)
+  
+  }
+  
+
   return (
     <Routes>
       <Route path="/" element={<Main user={user} setUserOut={setUserOut} />} />
       <Route path="/register" element={<Register register={register} user={user} />} />
       <Route path="/login" element={<Login login={login} user={user} />} />
-      <Route path="/Dashboard" element={<Dashboard user={user} setUser={setUser} />} />
+      <Route path="/Dashboard" element={<Dashboard user={user} setUser={setUser} setActiveChat={setActiveChat}  selectedUser={selectedUser}/>} />
       <Route path="/addpic" element={<Addpic user={user} updateUser={updateUser} />}></Route>
     </Routes>
   )
