@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { FaComments, FaCommentDots, FaRegCopyright, FaTimes } from "react-icons/fa";
+import { FaComments, FaCommentDots, FaRegCopyright, FaTimes, FaLock, FaTrash, FaPaperclip } from "react-icons/fa";
 
 // axios import
 import axios from 'axios'
@@ -47,19 +47,66 @@ const Content = (props) => {
   );
 
   return (
-    <div className="bg-gray-800 w-100vh" style={{ width: "90%" }}>
+    <div className="bg-gray-800 w-100vh" style={{ width: "90%", }}>
       
       {/* CODE FOR OPENING A SPECIFIC CHATBOX */}
       {props.selectedUser ? (
         <div>
-          <div className="top flex items-center p-4 bg-gray-900">
-          <img src={props.selectedUser.profilePic} className="w-10 h-10 rounded-full" alt="" />
-          <h1 className="ml-2 font-bold"> {props.selectedUser.username}</h1>
-          </div>
+     <div className="flex flex-col h-screen w-full bg-gray-950 text-white">
+  {/* Top Bar */}
+  <div className="flex items-center justify-between p-4 bg-gray-900 border-b border-gray-800">
+    <div className="flex items-center">
+      <img
+        src={props.selectedUser.profilePic || "https://cdn-icons-png.flaticon.com/512/149/149071.png"}
+        className="w-10 h-10 rounded-full border border-gray-700"
+        alt=""
+      />
+      <h1 className="ml-3 font-semibold text-lg">{props.selectedUser.username}</h1>
+    </div>
+    <div className="text-green-400 text-sm flex items-center">
+      <span>● Online</span>
+      <span className="text-red-500 ml-2 cursor-pointer"><FaTrash /></span>
+      </div>
+  </div>
 
-          <div className="encrypted p-4 bg-gray-700 text-center rounded m-10 " style={{width:"50%"}}>
-            <p>All Chats are end-to-end encrypted.</p>
-          </div>
+  {/* Encryption Banner */}
+  <div className="flex justify-center my-4">
+    <div className="bg-gray-800 text-gray-300 text-xs px-4 py-2 rounded-full flex items-center shadow-md">
+      <FaLock className="mr-2 text-gray-400" size={12} />
+      <span>All chats are end-to-end encrypted</span>
+    </div>
+  </div>
+
+  {/* Chat Area */}
+  <div className="flex-1 overflow-y-auto px-4 py-2 space-y-3">
+    {/* Example Messages */}
+    <div className="flex justify-start">
+      <div className="bg-gray-800 px-4 py-2 rounded-2xl rounded-tl-sm max-w-xs shadow">
+        Hey, how are you?
+      </div>
+    </div>
+
+    <div className="flex justify-end">
+      <div className="bg-blue-600 px-4 py-2 rounded-2xl rounded-tr-sm max-w-xs shadow">
+        I’m good! What about you?
+      </div>
+    </div>
+  </div>
+
+  {/* Input Area */}
+  <div className="p-4 border-t border-gray-800 flex items-center bg-gray-900">
+    <input
+      type="text"
+      placeholder="Type a message..."
+      className="flex-1 bg-gray-800 text-white px-4 py-2 rounded-full focus:outline-none"
+    />
+    <button className="ml-4 cursor-pointer"><FaPaperclip /></button>
+    <button className="ml-4 bg-blue-600 hover:bg-blue-500 px-4 py-2 rounded-full shadow cursor-pointer">
+      Send
+    </button>
+  </div>
+</div>
+
         </div>
       ) : (
         <div className="flex flex-col items-center justify-center h-full text-center">

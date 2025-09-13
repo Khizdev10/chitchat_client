@@ -17,6 +17,11 @@ function App() {
   )
 }
 
+/**
+ * AppRoutes component renders the main application routes.
+ * It manages the user state and login/logout functionality.
+ * It also provides the active chat user state.
+ */
 function AppRoutes() {
   const [user, setUser] = useState(null)
   const navigate = useNavigate()
