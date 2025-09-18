@@ -22,8 +22,6 @@ export default function Dashboard(props) {
        <Sidebar  user={props.user} setActiveChat={props.setActiveChat} />
        <Content user={props.user} setUser={props.setUser} selectedUser={props.selectedUser} />
       
-      
-
       </parents>
     </main>
   );

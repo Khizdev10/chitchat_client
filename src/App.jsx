@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { BrowserRouter, Routes, Route, useNavigate } from 'react-router-dom'
 import axios from 'axios'
+import socket from "../socket";
 
 // importing pages and components
 import './App.css'
@@ -26,6 +27,14 @@ function AppRoutes() {
   const [user, setUser] = useState(null)
   const navigate = useNavigate()
   const [selectedUser, setSelectedUser] = useState(null)
+
+  useEffect(() => {
+    if (user?._id) {
+      console.log("🔌 Connecting socket for user:", user._id);
+      socket.emit("join", user._id);
+    }
+  }, [user]);
+  
 
   const loginWithToken = async (token_stored) => {
     console.log("🔑 Trying token login with token:", token_stored)
