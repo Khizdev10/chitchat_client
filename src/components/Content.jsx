@@ -25,7 +25,7 @@ const Content = (props) => {
     fetchMessages();
   }, [props.selectedUser, props.user]);
 
-  
+
   // Fetch all users for new chat modal
   const getUsers = async () => {
     try {
@@ -121,20 +121,29 @@ const Content = (props) => {
 
           {/* Chat Area */}
           <div className="flex-1 overflow-y-auto px-4 py-2 space-y-3">
-            {messages.map((m, i) => (
-              <div
-                key={i}
-                className={`flex ${m.senderId === props.user._id ? "justify-end" : "justify-start"}`}
-              >
-                <div
-                  className={`px-4 py-2 rounded-2xl max-w-xs shadow ${
-                    m.senderId === props.user._id ? "bg-blue-600 rounded-tr-sm" : "bg-gray-800 rounded-tl-sm"
-                  }`}
-                >
-                  {m.text}
-                </div>
-              </div>
-            ))}
+          {messages.map((m, i) => (
+  <div key={i} className={`flex ${m.senderId === props.user._id ? "justify-end" : "justify-start"}`}>
+    <div
+      className={`px-4 py-2 rounded-2xl max-w-xs shadow ${
+        m.senderId === props.user._id ? "bg-blue-600 rounded-tr-sm" : "bg-gray-800 rounded-tl-sm"
+      }`}
+    >
+      {m.type === "image" ? (
+        <img src={m.text} alt="uploaded" className="max-w-full rounded-lg" />
+      ) : m.type === "video" ? (
+        <video src={m.text} controls className="max-w-full rounded-lg" />
+      ) : m.type === "raw" && m.text.endsWith(".pdf") ? (
+        <a href={m.text} target="_blank" rel="noopener noreferrer" className="underline text-blue-400">
+          📄 View PDF
+        </a>
+      ) : (
+        <p>{m.text}</p>
+      )}
+    </div>
+  </div>
+))}
+
+
           </div>
 
           {/* Input Area */}
@@ -146,7 +155,59 @@ const Content = (props) => {
               onChange={(e) => setText(e.target.value)}
               className="flex-1 bg-gray-800 text-white px-4 py-2 rounded-full focus:outline-none"
             />
-            <button className="ml-4 cursor-pointer"><FaPaperclip /></button>
+
+
+{/* File Input (hidden) */}
+<input
+  type="file"
+  id="fileInput"
+  className="hidden"
+  onChange={async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    const formData = new FormData();
+    formData.append("file", file);
+
+    try {
+      const res = await axios.post("http://localhost:3000/upload-message-file", formData, {
+        headers: { "Content-Type": "multipart/form-data",
+      Authorization: `Bearer ${localStorage.getItem("token")}`, 
+         },
+        withCredentials: true, // keep auth if needed
+      });
+
+      const fileMessage = {
+        senderId: props.user._id,
+        receiverId: props.selectedUser._id,
+        chatId: [props.user._id, props.selectedUser._id].sort().join("_"),
+        text: res.data.url,  // we store the file URL
+        type: res.data.type, // image, video, etc.
+      };
+
+      // Send via socket
+      socket.emit("send-message", fileMessage);
+
+      // Show instantly
+      setMessages((prev) => [...prev, fileMessage]);
+    } catch (err) {
+      console.error("File upload failed:", err);
+    }
+  }}
+/>
+
+{/* Paperclip Button */}
+<button
+  className="ml-4 cursor-pointer"
+  onClick={() => document.getElementById("fileInput").click()}
+>
+  <FaPaperclip />
+</button>
+
+
+
+
+
             <button
               onClick={sendMessage}
               className="ml-4 bg-blue-600 hover:bg-blue-500 px-4 py-2 rounded-full shadow cursor-pointer"
