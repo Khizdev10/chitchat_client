@@ -34,7 +34,9 @@ function AppRoutes() {
       socket.emit("join", user._id);
     }
   }, [user]);
+
   
+
 
   const loginWithToken = async (token_stored) => {
     console.log("🔑 Trying token login with token:", token_stored)

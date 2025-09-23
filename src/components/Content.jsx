@@ -10,6 +10,22 @@ const Content = (props) => {
   const [messages, setMessages] = useState([]); // ✅ chat messages state
   const [text, setText] = useState(""); // ✅ input message text
 
+
+  
+  // fetching old messages when the user changes the chat
+  useEffect(() => {
+    if (!props.user?._id || !props.selectedUser?._id) return;
+  
+    const fetchMessages = async () => {
+      const chatId = [props.user._id, props.selectedUser._id].sort().join("_");
+      const res = await axios.get(`http://localhost:3000/messages/${chatId}`);
+      setMessages(res.data);
+    };
+  
+    fetchMessages();
+  }, [props.selectedUser, props.user]);
+
+  
   // Fetch all users for new chat modal
   const getUsers = async () => {
     try {
@@ -57,7 +73,7 @@ const Content = (props) => {
     const newMsg = {
       senderId: props.user._id,
       receiverId: props.selectedUser._id,
-      chatId: "temporaryChatId", // later we’ll generate real chat IDs
+      chatId: [props.user._id, props.selectedUser._id].sort().join("_"), // later we’ll generate real chat IDs
       text,
     };
 
