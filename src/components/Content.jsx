@@ -10,6 +10,8 @@ import {
   FaCloudUploadAlt,
   FaDownload,
   FaSpinner,
+  FaFilePdf,
+  FaFileAlt,
 } from "react-icons/fa";
 import socket from "../../socket";
 import axios from "axios";
@@ -123,6 +125,7 @@ const Content = (props) => {
         chatId: [props.user._id, props.selectedUser._id].sort().join("_"),
         text: res.data.url,
         type: res.data.type,
+        mimetype: res.data.mimetype, // ✅ include mimetype
       };
 
       socket.emit("send-message", fileMessage);
@@ -182,10 +185,8 @@ const Content = (props) => {
           {/* Chat Area */}
           <div className="flex-1 overflow-y-auto px-4 py-2 space-y-3">
             {messages.map((m, i) => {
-              const isMedia =
-                m.type === "image" ||
-                m.type === "video" ||
-                (m.type === "raw" && !m.text.endsWith(".txt"));
+              const isMedia = m.type === "image" || m.type === "video";
+              const isSender = m.senderId === props.user._id;
 
               let content;
               if (m.type === "image") {
@@ -204,28 +205,40 @@ const Content = (props) => {
                     className="max-w-xs rounded-lg"
                   />
                 );
-              } else if (m.type === "raw" && m.text.endsWith(".pdf")) {
-                content = (
-                  <a
-                    href={m.text}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="underline text-blue-400"
-                  >
-                    📄 View PDF
-                  </a>
-                );
               } else if (m.type === "raw") {
+                const filename = m.original_filename || "file";
+                content = (
+                  <div className="flex flex-col items-center">
+                    <FaFileAlt className="text-yellow-400 text-3xl mb-2" />
+                    <p className="truncate max-w-[200px] text-sm">{filename}</p>
+                    <a
+                      href={`${m.text}?dl=1`}
+                      download={filename}
+                      className="text-green-400 hover:underline"
+                    >
+                      Download
+                    </a>
+                  </div>
+                );
+              }
+
+              else if (m.type === "raw") {
                 const filename = m.text.split("/").pop();
                 content = (
-                  <a
-                    href={m.text}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="underline text-green-400"
-                  >
-                    ⬇️ Download {filename}
-                  </a>
+                  <div className="flex flex-col items-center">
+                    <FaFileAlt className="text-yellow-400 text-3xl mb-2" />
+                    <p className="truncate max-w-[200px] text-sm">
+                      {filename}
+                    </p>
+                    <a
+                      href={m.text}
+                      download={filename}
+                      className="text-green-400 hover:underline"
+                    >
+
+                      Download
+                    </a>
+                  </div>
                 );
               } else {
                 content = <p>{m.text}</p>;
@@ -234,31 +247,30 @@ const Content = (props) => {
               return (
                 <div
                   key={i}
-                  className={`flex ${
-                    m.senderId === props.user._id
-                      ? "justify-end"
-                      : "justify-start"
-                  }`}
+                  className={`flex ${isSender ? "justify-end" : "justify-start"}`}
                 >
                   <div
-                    className={`${
-                      isMedia
-                        ? "" // ✅ no bubble for images/videos/files
-                        : `px-4 py-2 rounded-2xl max-w-xs shadow ${
-                            m.senderId === props.user._id
-                              ? "bg-blue-600 rounded-tr-sm"
-                              : "bg-gray-800 rounded-tl-sm"
-                          }`
-                    }`}
+                    className={`${isMedia
+                        ? "" // ✅ No bubble for image/video
+                        : `px-4 py-2 rounded-2xl max-w-xs shadow ${isSender
+                          ? "bg-blue-600 rounded-tr-sm"
+                          : "bg-gray-800 rounded-tl-sm"
+                        }`
+                      }`}
                   >
                     {content}
 
                     {/* ✅ Action buttons */}
                     {m.type !== "text" && (
                       <div className="flex justify-end gap-3 mt-2 text-xs text-gray-300">
-                        <a href={m.text} download className="hover:text-white">
+                        <a
+                          href={`${m.text}?dl=1`}
+                          download={m.original_filename || "video.mp4"}
+                          className="hover:text-white"
+                        >
                           <FaDownload />
                         </a>
+
                         <button
                           onClick={() => deleteMessage(i)}
                           className="hover:text-red-400"
@@ -424,11 +436,20 @@ const Content = (props) => {
                   controls
                   className="max-h-60 mx-auto rounded-lg"
                 />
+              ) : previewFile.type === "application/pdf" ? (
+                <div className="flex flex-col items-center">
+                  <FaFilePdf className="text-red-500 text-5xl mb-2" />
+                  <p className="truncate max-w-[250px] text-sm">
+                    {previewFile.name}
+                  </p>
+                </div>
               ) : (
-                <p className="text-gray-300">
-                  📄 {previewFile.name} (
-                  {(previewFile.size / 1024 / 1024).toFixed(2)} MB)
-                </p>
+                <div className="flex flex-col items-center">
+                  <FaFileAlt className="text-yellow-400 text-4xl mb-2" />
+                  <p className="truncate max-w-[250px] text-sm">
+                    {previewFile.name}
+                  </p>
+                </div>
               )}
             </div>
 
@@ -460,12 +481,4 @@ const Content = (props) => {
   );
 };
 
-
-// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-// things to add and improve : :
-// 1. add delete message option.
-// 2. add remove friend opiton.
-// 3. add group feature.
-// 4. improve the design 
-// 5. add download option and add pdf
 export default Content;
