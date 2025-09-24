@@ -72,7 +72,7 @@ function AppRoutes() {
 
   useEffect(() => {
     console.log("👤 Current user state is:", user)
-  }, [user])
+  }, [user,setUser])
 
   const register = async (username, email, password) => {
     console.log("📝 Attempting register with:", { username, email })

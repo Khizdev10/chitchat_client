@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import {
   FaComments,
   FaCommentDots,
@@ -22,9 +22,15 @@ const Content = (props) => {
   const [users, setUsers] = useState([]);
   const [messages, setMessages] = useState([]);
   const [text, setText] = useState("");
-
   const [previewFile, setPreviewFile] = useState(null);
   const [loading, setLoading] = useState(false);
+
+  const messagesEndRef = useRef(null);
+
+  // ✅ Auto-scroll to bottom
+  useEffect(() => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [messages]);
 
   // ✅ Fetch old messages
   useEffect(() => {
@@ -57,7 +63,12 @@ const Content = (props) => {
         userToBeAdded,
         currentUser,
       });
-      props.setUser(res.data.currentUser);
+      console.log(res.data);
+      props.setUser((prev) => ({
+        ...prev,
+        friends: res.data.currentUser?.friends , // replace with updated array
+      }));
+      setIsModalOpen(false);
     } catch (e) {
       console.log("error adding user to chat", e);
     }
@@ -125,7 +136,8 @@ const Content = (props) => {
         chatId: [props.user._id, props.selectedUser._id].sort().join("_"),
         text: res.data.url,
         type: res.data.type,
-        mimetype: res.data.mimetype, // ✅ include mimetype
+        mimetype: res.data.mimetype,
+        original_filename: res.data.original_filename, // ✅ keep original name
       };
 
       socket.emit("send-message", fileMessage);
@@ -136,6 +148,15 @@ const Content = (props) => {
     } finally {
       setLoading(false);
     }
+  };
+
+  const deleteFriend = async (friendId, ownId) => {
+    let res1 = await axios.post("http://localhost:3000/remove-friend", {
+      friendId,
+      ownId,
+    });
+    console.log(res1.data);
+    props.setUser(res1.data.user);
   };
 
   // ✅ Delete a message (local only for now)
@@ -169,21 +190,23 @@ const Content = (props) => {
             <div className="text-green-400 text-sm flex items-center">
               <span>● Online</span>
               <span className="text-red-500 ml-2 cursor-pointer">
-                <FaTrash />
+                <FaTrash
+                  onClick={() => {
+                    deleteFriend(props.selectedUser._id, props.user._id);
+                  }}
+                />
               </span>
-            </div>
-          </div>
-
-          {/* Encryption Banner */}
-          <div className="flex justify-center my-4">
-            <div className="bg-gray-800 text-gray-300 text-xs px-4 py-2 rounded-full flex items-center shadow-md">
-              <FaLock className="mr-2 text-gray-400" size={12} />
-              <span>All chats are end-to-end encrypted</span>
             </div>
           </div>
 
           {/* Chat Area */}
           <div className="flex-1 overflow-y-auto px-4 py-2 space-y-3">
+            {/* Chat Area */}
+            {/* 🔒 Encryption notice */}
+            <div className="flex justify-center mb-4 text-gray-400 text-xs items-center gap-2">
+              <FaLock />
+              <span>Your messages are end-to-end encrypted</span>
+            </div>
             {messages.map((m, i) => {
               const isMedia = m.type === "image" || m.type === "video";
               const isSender = m.senderId === props.user._id;
@@ -206,36 +229,21 @@ const Content = (props) => {
                   />
                 );
               } else if (m.type === "raw") {
-                const filename = m.original_filename || "file";
+                const filename =
+                  m.original_filename || m.text.split("/").pop();
                 content = (
                   <div className="flex flex-col items-center">
-                    <FaFileAlt className="text-yellow-400 text-3xl mb-2" />
+                    {m.mimetype === "application/pdf" ? (
+                      <FaFilePdf className="text-red-500 text-3xl mb-2" />
+                    ) : (
+                      <FaFileAlt className="text-yellow-400 text-3xl mb-2" />
+                    )}
                     <p className="truncate max-w-[200px] text-sm">{filename}</p>
-                    <a
-                      href={`${m.text}?dl=1`}
-                      download={filename}
-                      className="text-green-400 hover:underline"
-                    >
-                      Download
-                    </a>
-                  </div>
-                );
-              }
-
-              else if (m.type === "raw") {
-                const filename = m.text.split("/").pop();
-                content = (
-                  <div className="flex flex-col items-center">
-                    <FaFileAlt className="text-yellow-400 text-3xl mb-2" />
-                    <p className="truncate max-w-[200px] text-sm">
-                      {filename}
-                    </p>
                     <a
                       href={m.text}
                       download={filename}
                       className="text-green-400 hover:underline"
                     >
-
                       Download
                     </a>
                   </div>
@@ -247,16 +255,20 @@ const Content = (props) => {
               return (
                 <div
                   key={i}
-                  className={`flex ${isSender ? "justify-end" : "justify-start"}`}
+                  className={`flex ${
+                    isSender ? "justify-end" : "justify-start"
+                  }`}
                 >
                   <div
-                    className={`${isMedia
-                        ? "" // ✅ No bubble for image/video
-                        : `px-4 py-2 rounded-2xl max-w-xs shadow ${isSender
-                          ? "bg-blue-600 rounded-tr-sm"
-                          : "bg-gray-800 rounded-tl-sm"
-                        }`
-                      }`}
+                    className={`${
+                      isMedia
+                        ? ""
+                        : `px-4 py-2 rounded-2xl max-w-xs shadow ${
+                            isSender
+                              ? "bg-blue-600 rounded-tr-sm"
+                              : "bg-gray-800 rounded-tl-sm"
+                          }`
+                    }`}
                   >
                     {content}
 
@@ -264,8 +276,8 @@ const Content = (props) => {
                     {m.type !== "text" && (
                       <div className="flex justify-end gap-3 mt-2 text-xs text-gray-300">
                         <a
-                          href={`${m.text}?dl=1`}
-                          download={m.original_filename || "video.mp4"}
+                          href={m.text}
+                          download={m.original_filename || "file"}
                           className="hover:text-white"
                         >
                           <FaDownload />
@@ -283,6 +295,7 @@ const Content = (props) => {
                 </div>
               );
             })}
+            <div ref={messagesEndRef} />
           </div>
 
           {/* Input Area */}
@@ -324,7 +337,6 @@ const Content = (props) => {
           </div>
         </div>
       ) : (
-        // ✅ No Chat Selected
         <div className="flex flex-col items-center justify-center h-full text-center">
           <FaComments
             className="text-8xl m-2 cursor-pointer"
@@ -333,80 +345,16 @@ const Content = (props) => {
           <p className="text-2xl font-bold opacity-50">Welcome to Chit-Chat!</p>
           <p className="opacity-50 font-semibold">Safe & Secure</p>
 
+          {/* ✅ Add Chat Button restored here */}
           <button
-            className="flex items-center cursor-pointer gap-2 bg-blue-900 text-white text-sm mt-2 px-4 py-2 rounded-full hover:bg-blue-800 transition animate-pulse"
             onClick={() => {
               setIsModalOpen(true);
               getUsers();
             }}
+            className="mt-6 bg-blue-800 hover:bg-blue-900 px-4 py-2 rounded-lg text-white font-semibold"
           >
-            <FaCommentDots /> New Chat
+            + New Chat
           </button>
-
-          {/* Modal */}
-          {isModalOpen && (
-            <div className="fixed inset-0 flex items-center justify-center bg-black/30 backdrop-blur-sm">
-              <div className="bg-gray-900 text-white rounded-2xl shadow-lg w-106 p-6 relative border border-gray-700">
-                <button
-                  className="absolute top-3 right-3 text-gray-300 hover:text-white"
-                  onClick={() => setIsModalOpen(false)}
-                >
-                  <FaTimes size={18} />
-                </button>
-
-                <h2 className="text-lg font-bold mb-4">Start a New Chat</h2>
-
-                <input
-                  type="text"
-                  placeholder="Search user..."
-                  className="w-full px-3 py-2 border border-gray-600 rounded-lg mb-4 
-                  focus:outline-none focus:ring focus:ring-blue-500 bg-gray-900 text-white"
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                />
-
-                <div className="max-h-40 overflow-y-auto">
-                  {filteredUsers.length > 0 ? (
-                    filteredUsers.map((user, idx) => (
-                      <div
-                        key={idx}
-                        className="px-3 py-2 cursor-pointer hover:bg-gray-800 rounded-md flex items-center justify-between gap-2"
-                        onClick={() => {
-                          console.log("Start chat with:", user.username);
-                          setIsModalOpen(false);
-                        }}
-                      >
-                        <img
-                          className="w-10 h-10 rounded-full"
-                          src={
-                            user.profilePic ||
-                            "https://cdn-icons-png.flaticon.com/512/149/149071.png"
-                          }
-                          alt=""
-                        />
-                        <span>{user.username}</span>
-                        <a
-                          className="btn bg-gray-800"
-                          onClick={() => addUserToChat(user)}
-                        >
-                          Add
-                        </a>
-                      </div>
-                    ))
-                  ) : (
-                    <p className="text-gray-400 text-sm">No users found</p>
-                  )}
-                </div>
-              </div>
-            </div>
-          )}
-
-          <footer className="text-gray-400 py-3 text-center text-sm absolute bottom-2 text-center">
-            <div className="flex items-center justify-center gap-1">
-              <FaRegCopyright className="text-gray-400" />
-              <span> Chit-Chat. All rights reserved.</span>
-            </div>
-          </footer>
         </div>
       )}
 
@@ -473,6 +421,62 @@ const Content = (props) => {
                   </>
                 )}
               </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ✅ Add Chat Modal */}
+      {isModalOpen && (
+        <div className="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50">
+          <div className="bg-gray-900 p-6 rounded-xl w-96 shadow-lg">
+            <div className="flex justify-between items-center mb-4">
+              <h2 className="text-lg font-bold">Start a New Chat</h2>
+              <button
+                onClick={() => setIsModalOpen(false)}
+                className="text-gray-400 hover:text-white"
+              >
+                <FaTimes />
+              </button>
+            </div>
+
+            <input
+              type="text"
+              placeholder="Search users..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="w-full mb-4 px-3 py-2 bg-gray-800 text-white rounded-lg focus:outline-none"
+            />
+
+            <div className="max-h-60 overflow-y-auto space-y-2">
+              {filteredUsers.length > 0 ? (
+                filteredUsers.map((u) => (
+                  <div
+                    key={u._id}
+                    className="flex items-center justify-between bg-gray-800 p-2 rounded-lg"
+                  >
+                    <div className="flex items-center">
+                      <img
+                        src={
+                          u.profilePic ||
+                          "https://cdn-icons-png.flaticon.com/512/149/149071.png"
+                        }
+                        alt=""
+                        className="w-8 h-8 rounded-full mr-2"
+                      />
+                      <p>{u.username}</p>
+                    </div>
+                    <button
+                      onClick={() => addUserToChat(u)}
+                      className="px-3 py-1 bg-blue-800 hover:bg-green-500 text-white text-sm rounded-lg"
+                    >
+                      Chat
+                    </button>
+                  </div>
+                ))
+              ) : (
+                <p className="text-gray-400 text-center">No users found</p>
+              )}
             </div>
           </div>
         </div>
