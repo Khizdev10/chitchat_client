@@ -25,6 +25,8 @@ const Content = (props) => {
   const [previewFile, setPreviewFile] = useState(null);
   const [loading, setLoading] = useState(false);
 
+
+
   const messagesEndRef = useRef(null);
 
   // ✅ Auto-scroll to bottom
@@ -66,7 +68,7 @@ const Content = (props) => {
       console.log(res.data);
       props.setUser((prev) => ({
         ...prev,
-        friends: res.data.currentUser?.friends , // replace with updated array
+        friends: res.data.currentUser?.friends, // replace with updated array
       }));
       setIsModalOpen(false);
     } catch (e) {
@@ -155,14 +157,31 @@ const Content = (props) => {
       friendId,
       ownId,
     });
+
+    document.querySelector("#deleteNotice").style.display = "block";
+    setTimeout(() => document.querySelector("#deleteNotice").style.display = "none", 3000);
+
     console.log(res1.data);
     props.setUser(res1.data.user);
   };
+// ✅ Delete a message (local only for now)
+const deleteMessage = async (i, messageId) => {
+  console.log(messageId);
+  console.log(messageId, "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
 
-  // ✅ Delete a message (local only for now)
-  const deleteMessage = (index) => {
-    setMessages((prev) => prev.filter((_, i) => i !== index));
-  };
+  // Remove the message from the messages array
+  setMessages((prev) => prev.filter((msg) => msg._id !== messageId));
+
+  const res = axios
+    .delete(`http://localhost:3000/messages/${messageId}`)
+    .then((res) => {
+      console.log(res.data);
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+};
+
 
   const filteredUsers = users.filter((user) =>
     user.username.toLowerCase().includes(searchTerm.toLowerCase())
@@ -200,7 +219,14 @@ const Content = (props) => {
           </div>
 
           {/* Chat Area */}
-          <div className="flex-1 overflow-y-auto px-4 py-2 space-y-3">
+          <div className="flex-1 overflow-y-auto px-4 py-2 space-y-3">{/* Delete Notice */}
+            <div
+              id="deleteNotice"
+              className="fixed top-20 left-2/3 -translate-x-1/2 flex justify-center items-center bg-red-800 text-white px-4 py-2 rounded shadow-lg z-50 hidden"
+            >
+              User has been removed from your friend list ✅
+            </div>
+
             {/* Chat Area */}
             {/* 🔒 Encryption notice */}
             <div className="flex justify-center mb-4 text-gray-400 text-xs items-center gap-2">
@@ -239,13 +265,7 @@ const Content = (props) => {
                       <FaFileAlt className="text-yellow-400 text-3xl mb-2" />
                     )}
                     <p className="truncate max-w-[200px] text-sm">{filename}</p>
-                    <a
-                      href={m.text}
-                      download={filename}
-                      className="text-green-400 hover:underline"
-                    >
-                      Download
-                    </a>
+                    
                   </div>
                 );
               } else {
@@ -255,20 +275,17 @@ const Content = (props) => {
               return (
                 <div
                   key={i}
-                  className={`flex ${
-                    isSender ? "justify-end" : "justify-start"
-                  }`}
+                  className={`flex ${isSender ? "justify-end" : "justify-start"
+                    }`}
                 >
                   <div
-                    className={`${
-                      isMedia
+                    className={`${isMedia
                         ? ""
-                        : `px-4 py-2 rounded-2xl max-w-xs shadow ${
-                            isSender
-                              ? "bg-blue-600 rounded-tr-sm"
-                              : "bg-gray-800 rounded-tl-sm"
-                          }`
-                    }`}
+                        : `px-4 py-2 rounded-2xl max-w-xs shadow ${isSender
+                          ? "bg-blue-600 rounded-tr-sm"
+                          : "bg-gray-800 rounded-tl-sm"
+                        }`
+                      }`}
                   >
                     {content}
 
@@ -284,7 +301,7 @@ const Content = (props) => {
                         </a>
 
                         <button
-                          onClick={() => deleteMessage(i)}
+                          onClick={() => deleteMessage(m._id)}
                           className="hover:text-red-400"
                         >
                           <FaTrash />
@@ -486,3 +503,21 @@ const Content = (props) => {
 };
 
 export default Content;
+
+
+// chatgpt don't remove these comments below  note : DONOT REMOVE THESE COMMENTS especially for chatgpt
+
+// things I did : 
+// 1. added delete friend functionality
+// 2. added video playback and pdf download feature.
+// 3. fixed the layout a bit.
+// 4. fixed some bugs.
+
+// thins to be done :
+// 1. add delete message functionality.
+// 2. add edit message functionality.
+// 3. add group chat feature.
+// 4. last sent message notification.
+// 5. status of the user..
+// 6. typing indicator for the user.
+// 7. fix some bugs.

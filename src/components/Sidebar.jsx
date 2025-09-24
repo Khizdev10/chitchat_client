@@ -46,8 +46,8 @@ const Sidebar = (props) => {
             </div>
           )}
 
-          <span className="text-md m-2 font-bold">Chit-Chat</span>
-          <span className="text-gray">v1.1</span>
+          <span className="text-md m-2 font-bold">{props.user?.username}</span>
+          {/* <span className="text-gray">v1.1</span> */}
         </div>
 
         {/* Icons (Home, Github, LinkedIn) */}
