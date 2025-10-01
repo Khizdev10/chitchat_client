@@ -139,7 +139,7 @@ const Content = (props) => {
         text: res.data.url,
         type: res.data.type,
         mimetype: res.data.mimetype,
-        original_filename: res.data.original_filename, // ✅ keep original name
+        original_filename: res.data.original_filename, // ✅ keep original name ( this is needed to be fixed still not working)
       };
 
       socket.emit("send-message", fileMessage);
