@@ -438,12 +438,14 @@ const deleteMessage = async (i, messageId) => {
                   </>
                 )}
               </button>
+
             </div>
           </div>
         </div>
       )}
 
-      {/* ✅ Add Chat Modal */}
+      {/*  Add Chat Modal */}
+      
       {isModalOpen && (
         <div className="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50">
           <div className="bg-gray-900 p-6 rounded-xl w-96 shadow-lg">
