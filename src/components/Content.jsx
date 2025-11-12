@@ -461,11 +461,7 @@ const deleteMessage = async (i, messageId) => {
                 <FaTimes />
               </button>
             </div>
-
-{/* sa
-ss */}
-
-            <input
+          <input
               type="text"
               placeholder="Search users..."
               value={searchTerm}
@@ -480,6 +476,7 @@ ss */}
                     key={u._id}
                     className="flex items-center justify-between bg-gray-800 p-2 rounded-lg"
                   >
+                    <div></div>
                     <div className="flex items-center">
                       <img
                         src={
